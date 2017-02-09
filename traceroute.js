@@ -3,14 +3,10 @@
 const Process = require('./process');
 
 class Traceroute extends Process {
-    constructor(options = ['-q', 1, '-z', 0], sudo = false) {
-        let cmd = 'traceroute';
-        let cmd_options = options.concat(['-n']); // Resolved names parsing is not supported now
-        if (sudo) {
-            cmd = 'sudo';
-            cmd_options = ['traceroute'].concat(cmd_options);
-        }
-        super(cmd, cmd_options);
+    constructor(options = ['-q', 1, '-z', 0], sudo = false, namespace = '') {
+        // Adding '-n' option as currently there is no prasing support for resolved addresses
+        let allArgs = (sudo ? ['sudo'] : []).concat(namespace ? ['ip', 'netns', 'exec', namespace] : []).concat(['traceroute']).concat(options).concat(['-n']);
+        super(allArgs[0], allArgs.slice(1));
     }
 
     parseDestination(data) {
