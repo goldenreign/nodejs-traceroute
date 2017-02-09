@@ -48,6 +48,13 @@ class Process extends events.EventEmitter {
                         this.emit('hop', hop);
                     }
                 });
+            readline.createInterface({
+                    input: process.stderr,
+                    terminal: false
+                })
+                .on('line', (line) => {
+                    this.emit('stderr', line);
+                });
         }
     }
 

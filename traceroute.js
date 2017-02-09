@@ -3,8 +3,14 @@
 const Process = require('./process');
 
 class Traceroute extends Process {
-    constructor(sendwait = 0) {
-        super('traceroute', ['-q', 1, '-z', sendwait, '-n']);
+    constructor(options = ['-q', 1, '-z', 0], sudo = false) {
+        let cmd = 'traceroute';
+        let cmd_options = options.concat(['-n']); // Resolved names parsing is not supported now
+        if (sudo) {
+            cmd = 'sudo';
+            cmd_options = ['traceroute'].concat(cmd_options);
+        }
+        super(cmd, cmd_options);
     }
 
     parseDestination(data) {
